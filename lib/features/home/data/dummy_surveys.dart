@@ -1,0 +1,88 @@
+import '../models/survey.dart';
+
+/// بيانات تجريبية للواجهات فقط — تُستبدل لاحقاً ببيانات الـ API.
+const List<String> surveyFields = [
+  'الكل',
+  'نفسي',
+  'صحي',
+  'تعليمي',
+  'اجتماعي',
+  'تقني',
+];
+
+const Survey featuredSurvey = Survey(
+  id: 's-000',
+  title: 'العادات الغذائية لدى موظفي القطاع الخاص',
+  field: 'صحي',
+  researcher: 'أ. منى الشهري',
+  organization: 'جامعة أم القرى',
+  minutes: 8,
+  questions: 20,
+  reward: 12,
+  joined: 189,
+  target: 200,
+  closesIn: '3 ساعات',
+);
+
+const List<Survey> dummySurveys = [
+  Survey(
+    id: 's-001',
+    title: 'أثر استخدام وسائل التواصل على جودة النوم لدى طلبة الجامعة',
+    field: 'نفسي',
+    researcher: 'د. سارة العتيبي',
+    organization: 'جامعة الملك عبدالعزيز',
+    minutes: 6,
+    questions: 14,
+    reward: 10,
+    joined: 128,
+    target: 200,
+  ),
+  Survey(
+    id: 's-002',
+    title: 'تجربة المستخدم في تطبيقات التوصيل المحلية',
+    field: 'تقني',
+    researcher: 'م. خالد الزهراني',
+    organization: 'جامعة الملك سعود',
+    minutes: 4,
+    questions: 10,
+    reward: 7,
+    joined: 76,
+    target: 150,
+  ),
+  Survey(
+    id: 's-003',
+    title: 'رضا أولياء الأمور عن التعليم عن بُعد بعد الجائحة',
+    field: 'تعليمي',
+    researcher: 'د. فهد القحطاني',
+    organization: 'جامعة الملك فهد للبترول والمعادن',
+    minutes: 5,
+    questions: 12,
+    reward: 9,
+    joined: 44,
+    target: 300,
+  ),
+  Survey(
+    id: 's-004',
+    title: 'العمل التطوعي وأثره على الانتماء المجتمعي',
+    field: 'اجتماعي',
+    researcher: 'أ. ريم الغامدي',
+    organization: 'جامعة طيبة',
+    minutes: 3,
+    questions: 8,
+    reward: 5,
+    joined: 90,
+    target: 120,
+  ),
+  Survey(
+    id: 's-005',
+    title: 'مستوى القلق الأكاديمي قبل الاختبارات النهائية',
+    field: 'نفسي',
+    researcher: 'د. عبدالله الحربي',
+    organization: 'جامعة الإمام عبدالرحمن بن فيصل',
+    minutes: 7,
+    questions: 18,
+    reward: 11,
+    joined: 210,
+    target: 250,
+  ),
+];
