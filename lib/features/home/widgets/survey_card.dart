@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/baheth_button.dart';
+import '../../../core/widgets/AlHaytham_button.dart';
 import '../models/survey.dart';
 import 'field_pill.dart';
 import 'sample_meter.dart';
@@ -69,7 +69,7 @@ class SurveyCard extends StatelessWidget {
             remaining: survey.remaining,
           ),
           const SizedBox(height: 16),
-          BahethButton(
+          AlHaythamButton(
             label: 'شارك في الاستبيان',
             soft: true,
             height: 46,

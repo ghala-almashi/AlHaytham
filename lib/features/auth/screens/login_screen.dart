@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/baheth_button.dart';
-import '../../../core/widgets/baheth_text_field.dart';
+import '../../../core/widgets/AlHaytham_button.dart';
+import '../../../core/widgets/AlHaytham_text_field.dart';
 import '../../home/screens/home_screen.dart';
 import '../widgets/auth_scaffold.dart';
 import 'register_screen.dart';
@@ -30,9 +30,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() {
     // واجهات فقط: لا يوجد ربط بالباك اند بعد.
     if (_formKey.currentState?.validate() ?? false) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
     }
   }
 
@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            BahethTextField(
+            AlHaythamTextField(
               controller: _email,
               label: 'البريد الإلكتروني',
               hint: 'name@example.com',
@@ -62,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
             const SizedBox(height: 18),
-            BahethTextField(
+            AlHaythamTextField(
               controller: _password,
               label: 'كلمة المرور',
               hint: 'أدخل كلمة المرور',
@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             const SizedBox(height: 14),
-            BahethButton(label: 'تسجيل الدخول', onPressed: _login),
+            AlHaythamButton(label: 'تسجيل الدخول', onPressed: _login),
           ],
         ),
       ),
@@ -102,9 +102,9 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           Text('ما عندك حساب؟', style: AppText.body(13.5)),
           TextButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const RegisterScreen()),
-            ),
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const RegisterScreen())),
             child: const Text('أنشئ حساب مشارك'),
           ),
         ],

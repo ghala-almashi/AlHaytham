@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/screens/login_screen.dart';
 
-void main() => runApp(const BahethApp());
+void main() => runApp(const AlHaythamApp());
 
-class BahethApp extends StatelessWidget {
-  const BahethApp({super.key});
+class AlHaythamApp extends StatelessWidget {
+  const AlHaythamApp({super.key});
 
   @override
   Widget build(BuildContext context) {

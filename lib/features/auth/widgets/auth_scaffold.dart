@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/baheth_mark.dart';
+import '../../../core/widgets/AlHaytham_mark.dart';
 
 /// الهيكل المشترك لشاشتي الدخول والتسجيل.
 class AuthScaffold extends StatelessWidget {
@@ -49,7 +49,7 @@ class AuthScaffold extends StatelessWidget {
                   ),
                 ),
               const SizedBox(height: 10),
-              const BahethMark(),
+              const AlHaythamMark(),
               const SizedBox(height: 28),
               Text(title, style: AppText.heading(26)),
               const SizedBox(height: 8),
@@ -64,10 +64,7 @@ class AuthScaffold extends StatelessWidget {
                 ),
                 child: child,
               ),
-              if (footer != null) ...[
-                const SizedBox(height: 20),
-                footer!,
-              ],
+              if (footer != null) ...[const SizedBox(height: 20), footer!],
             ],
           ),
         ),

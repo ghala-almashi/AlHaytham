@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/baheth_button.dart';
-import '../../../core/widgets/baheth_text_field.dart';
+import '../../../core/widgets/AlHaytham_button.dart';
+import '../../../core/widgets/AlHaytham_text_field.dart';
 import '../../home/screens/home_screen.dart';
 import '../widgets/auth_scaffold.dart';
 
@@ -68,7 +68,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            BahethTextField(
+            AlHaythamTextField(
               controller: _name,
               label: 'الاسم',
               hint: 'الاسم الأول والأخير',
@@ -77,7 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   (value?.trim().isEmpty ?? true) ? 'اكتب اسمك' : null,
             ),
             const SizedBox(height: 18),
-            BahethTextField(
+            AlHaythamTextField(
               controller: _email,
               label: 'البريد الإلكتروني',
               hint: 'name@example.com',
@@ -93,7 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               },
             ),
             const SizedBox(height: 18),
-            BahethTextField(
+            AlHaythamTextField(
               controller: _password,
               label: 'كلمة المرور',
               hint: '8 أحرف على الأقل',
@@ -107,7 +107,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               },
             ),
             const SizedBox(height: 18),
-            BahethTextField(
+            AlHaythamTextField(
               controller: _confirm,
               label: 'تأكيد كلمة المرور',
               hint: 'أعد كتابة كلمة المرور',
@@ -127,7 +127,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('الفئة العمرية', style: AppText.heading(13, weight: FontWeight.w500)),
+                  Text(
+                    'الفئة العمرية',
+                    style: AppText.heading(13, weight: FontWeight.w500),
+                  ),
                   const SizedBox(height: 10),
                   _ChoiceRow(
                     options: _ageGroups,
@@ -135,7 +138,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onSelect: (v) => setState(() => _ageGroup = v),
                   ),
                   const SizedBox(height: 18),
-                  Text('الجنس', style: AppText.heading(13, weight: FontWeight.w500)),
+                  Text(
+                    'الجنس',
+                    style: AppText.heading(13, weight: FontWeight.w500),
+                  ),
                   const SizedBox(height: 10),
                   _ChoiceRow(
                     options: _genders,
@@ -170,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ],
             ),
             const SizedBox(height: 18),
-            BahethButton(label: 'إنشاء الحساب', onPressed: _register),
+            AlHaythamButton(label: 'إنشاء الحساب', onPressed: _register),
           ],
         ),
       ),
