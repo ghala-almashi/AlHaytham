@@ -4,8 +4,8 @@ import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 
 /// شعار التطبيق: مربّع بحرف "ب" مع اسم المنصة.
-class BahethMark extends StatelessWidget {
-  const BahethMark({super.key, this.showWordmark = true});
+class AlHaythamMark extends StatelessWidget {
+  const AlHaythamMark({super.key, this.showWordmark = true});
 
   final bool showWordmark;
 

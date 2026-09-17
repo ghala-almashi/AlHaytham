@@ -4,8 +4,8 @@ import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 
 /// زر التطبيق بنمطين: أساسي (مرجاني معبّأ) وهادئ (خلفية فاتحة).
-class BahethButton extends StatelessWidget {
-  const BahethButton({
+class AlHaythamButton extends StatelessWidget {
+  const AlHaythamButton({
     super.key,
     required this.label,
     required this.onPressed,

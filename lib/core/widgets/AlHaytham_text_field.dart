@@ -4,8 +4,8 @@ import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 
 /// حقل إدخال بعنوان ثابت فوقه، مع إظهار/إخفاء كلمة المرور.
-class BahethTextField extends StatefulWidget {
-  const BahethTextField({
+class AlHaythamTextField extends StatefulWidget {
+  const AlHaythamTextField({
     super.key,
     required this.label,
     required this.hint,
@@ -27,10 +27,10 @@ class BahethTextField extends StatefulWidget {
   final TextInputAction textInputAction;
 
   @override
-  State<BahethTextField> createState() => _BahethTextFieldState();
+  State<AlHaythamTextField> createState() => _AlHaythamTextFieldState();
 }
 
-class _BahethTextFieldState extends State<BahethTextField> {
+class _AlHaythamTextFieldState extends State<AlHaythamTextField> {
   late bool _hidden = widget.obscure;
 
   @override
@@ -38,10 +38,7 @@ class _BahethTextFieldState extends State<BahethTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.label,
-          style: AppText.heading(13, weight: FontWeight.w500),
-        ),
+        Text(widget.label, style: AppText.heading(13, weight: FontWeight.w500)),
         const SizedBox(height: 8),
         TextFormField(
           controller: widget.controller,
@@ -63,7 +60,9 @@ class _BahethTextFieldState extends State<BahethTextField> {
                       size: 20,
                       color: AppColors.clay,
                     ),
-                    tooltip: _hidden ? 'إظهار كلمة المرور' : 'إخفاء كلمة المرور',
+                    tooltip: _hidden
+                        ? 'إظهار كلمة المرور'
+                        : 'إخفاء كلمة المرور',
                   )
                 : null,
           ),
