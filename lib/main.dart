@@ -3,7 +3,15 @@ import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/screens/login_screen.dart';
 
-void main() => runApp(const AlHaythamApp());
+import 'package:firebase_core/firebase_core.dart';
+
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const AlHaythamApp());
+}
 
 class AlHaythamApp extends StatelessWidget {
   const AlHaythamApp({super.key});
@@ -15,7 +23,6 @@ class AlHaythamApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       home: const LoginScreen(),
-      // التطبيق كامل من اليمين لليسار
       builder: (context, child) => Directionality(
         textDirection: TextDirection.rtl,
         child: child ?? const SizedBox.shrink(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
@@ -22,11 +23,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirm = TextEditingController();
 
   static const _ageGroups = ['18 - 24', '25 - 34', '35 - 44', '45 فأكثر'];
+
   static const _genders = ['أنثى', 'ذكر'];
 
   String _ageGroup = _ageGroups.first;
   String _gender = _genders.first;
   bool _agreed = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -37,8 +40,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  void _register() {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
+  Future<void> _register() async {
+    // التحقق من الحقول
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      return;
+    }
+
+    // التحقق من الموافقة على الشروط
     if (!_agreed) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -51,10 +59,84 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       return;
     }
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
-      (route) => false,
-    );
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // إنشاء الحساب في Firebase Authentication
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _email.text.trim(),
+        password: _password.text,
+      );
+
+      // التأكد أن الصفحة ما زالت موجودة
+      if (!mounted) return;
+
+      // الانتقال إلى الصفحة الرئيسية بعد نجاح التسجيل
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        (route) => false,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+
+      String message;
+
+      switch (e.code) {
+        case 'email-already-in-use':
+          message = 'هذا البريد الإلكتروني مسجل مسبقًا';
+          break;
+
+        case 'invalid-email':
+          message = 'البريد الإلكتروني غير صحيح';
+          break;
+
+        case 'weak-password':
+          message = 'كلمة المرور ضعيفة، اختاري كلمة مرور أقوى';
+          break;
+
+        case 'operation-not-allowed':
+          message = 'تسجيل الدخول بالبريد الإلكتروني غير مفعّل في Firebase';
+          break;
+
+        case 'network-request-failed':
+          message = 'تأكدي من اتصال الإنترنت وحاولي مرة ثانية';
+          break;
+
+        default:
+          message = 'حدث خطأ أثناء إنشاء الحساب، حاولي مرة ثانية';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.ink,
+          content: Text(
+            message,
+            style: AppText.body(13.5, color: Colors.white),
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.ink,
+          content: Text(
+            'حدث خطأ غير متوقع، حاولي مرة ثانية',
+            style: AppText.body(13.5, color: Colors.white),
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -63,6 +145,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       showBack: true,
       title: 'سجّل كمشارك',
       subtitle: 'دقيقة وحدة وتبدأ تشارك في بحوث حقيقية وتكسب مقابلها.',
+      footer: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('عندك حساب؟', style: AppText.body(13.5)),
+          TextButton(
+            onPressed: () => Navigator.of(context).maybePop(),
+            child: const Text('سجّل دخولك'),
+          ),
+        ],
+      ),
       child: Form(
         key: _formKey,
         child: Column(
@@ -76,7 +168,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               validator: (value) =>
                   (value?.trim().isEmpty ?? true) ? 'اكتب اسمك' : null,
             ),
+
             const SizedBox(height: 18),
+
             AlHaythamTextField(
               controller: _email,
               label: 'البريد الإلكتروني',
@@ -85,14 +179,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
               keyboardType: TextInputType.emailAddress,
               validator: (value) {
                 final text = value?.trim() ?? '';
-                if (text.isEmpty) return 'اكتب بريدك الإلكتروني';
+
+                if (text.isEmpty) {
+                  return 'اكتب بريدك الإلكتروني';
+                }
+
                 if (!text.contains('@') || !text.contains('.')) {
                   return 'البريد غير مكتمل، تأكد منه';
                 }
+
                 return null;
               },
             ),
+
             const SizedBox(height: 18),
+
             AlHaythamTextField(
               controller: _password,
               label: 'كلمة المرور',
@@ -103,10 +204,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 if ((value ?? '').length < 8) {
                   return 'كلمة المرور 8 أحرف على الأقل';
                 }
+
                 return null;
               },
             ),
+
             const SizedBox(height: 18),
+
             AlHaythamTextField(
               controller: _confirm,
               label: 'تأكيد كلمة المرور',
@@ -114,10 +218,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
               icon: Icons.lock_outline_rounded,
               obscure: true,
               textInputAction: TextInputAction.done,
-              validator: (value) =>
-                  value != _password.text ? 'كلمتا المرور ما تطابقن' : null,
+              validator: (value) {
+                if (value != _password.text) {
+                  return 'كلمتا المرور ما تطابقن';
+                }
+
+                return null;
+              },
             ),
+
             const SizedBox(height: 24),
+
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -131,24 +242,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     'الفئة العمرية',
                     style: AppText.heading(13, weight: FontWeight.w500),
                   ),
+
                   const SizedBox(height: 10),
+
                   _ChoiceRow(
                     options: _ageGroups,
                     selected: _ageGroup,
-                    onSelect: (v) => setState(() => _ageGroup = v),
+                    onSelect: (v) {
+                      setState(() {
+                        _ageGroup = v;
+                      });
+                    },
                   ),
+
                   const SizedBox(height: 18),
+
                   Text(
                     'الجنس',
                     style: AppText.heading(13, weight: FontWeight.w500),
                   ),
+
                   const SizedBox(height: 10),
+
                   _ChoiceRow(
                     options: _genders,
                     selected: _gender,
-                    onSelect: (v) => setState(() => _gender = v),
+                    onSelect: (v) {
+                      setState(() {
+                        _gender = v;
+                      });
+                    },
                   ),
+
                   const SizedBox(height: 14),
+
                   Text(
                     'نستخدم هذي المعلومات عشان نرشّح لك الاستبيانات اللي تنطبق عليك فقط.',
                     style: AppText.body(12.5, color: AppColors.inkSoft),
@@ -156,14 +283,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ],
               ),
             ),
+
             const SizedBox(height: 18),
+
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Checkbox(
                   value: _agreed,
-                  onChanged: (v) => setState(() => _agreed = v ?? false),
+                  onChanged: (v) {
+                    setState(() {
+                      _agreed = v ?? false;
+                    });
+                  },
                 ),
+
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(top: 12),
@@ -175,20 +309,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ],
             ),
+
             const SizedBox(height: 18),
-            AlHaythamButton(label: 'إنشاء الحساب', onPressed: _register),
+
+            AlHaythamButton(
+              label: _isLoading ? 'جاري إنشاء الحساب...' : 'إنشاء الحساب',
+              onPressed: _isLoading ? null : _register,
+            ),
           ],
         ),
-      ),
-      footer: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('عندك حساب؟', style: AppText.body(13.5)),
-          TextButton(
-            onPressed: () => Navigator.of(context).maybePop(),
-            child: const Text('سجّل دخولك'),
-          ),
-        ],
       ),
     );
   }
@@ -213,6 +342,7 @@ class _ChoiceRow extends StatelessWidget {
       runSpacing: 8,
       children: options.map((option) {
         final isSelected = option == selected;
+
         return GestureDetector(
           onTap: () => onSelect(option),
           child: AnimatedContainer(

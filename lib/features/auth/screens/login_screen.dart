@@ -7,6 +7,8 @@ import '../../home/screens/home_screen.dart';
 import '../widgets/auth_scaffold.dart';
 import 'register_screen.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -27,12 +29,20 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _login() {
-    // واجهات فقط: لا يوجد ربط بالباك اند بعد.
+  void _login() async {
     if (_formKey.currentState?.validate() ?? false) {
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen()));
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _email.text.trim(),
+          password: _password.text.trim(),
+        );
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message ?? 'حدث خطأ ما')));
+      }
     }
   }
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "618267460887",
+    "project_id": "alhaytham-d6298",
+    "storage_bucket": "alhaytham-d6298.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618267460887:android:3d4e4090e0150960822352",
+        "android_client_info": {
+          "package_name": "com.example.baheth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDNWy1cvxYr-4MBSH-s88JrhkNouQRLVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
