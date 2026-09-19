@@ -74,8 +74,8 @@ class AppTheme {
         ),
         hintStyle: AppText.body(14, color: AppColors.clay),
         errorStyle: AppText.body(12, color: AppColors.danger),
-        border: _border(AppColors.clay.withOpacity(0.45)),
-        enabledBorder: _border(AppColors.clay.withOpacity(0.45)),
+        border: _border(AppColors.clay.withValues(alpha: 0.45)),
+        enabledBorder: _border(AppColors.clay.withValues(alpha: 0.45)),
         focusedBorder: _border(AppColors.coral, 1.6),
         errorBorder: _border(AppColors.danger),
         focusedErrorBorder: _border(AppColors.danger, 1.6),
@@ -105,7 +105,10 @@ class AppTheme {
               ? AppColors.coral
               : Colors.white,
         ),
-        side: BorderSide(color: AppColors.clay.withOpacity(0.8), width: 1.4),
+        side: BorderSide(
+          color: AppColors.clay.withValues(alpha: 0.8),
+          width: 1.4,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       ),
     );

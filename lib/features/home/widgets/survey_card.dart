@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/AlHaytham_button.dart';
+import '../../../core/widgets/alhaytham_button.dart';
 import '../models/survey.dart';
 import 'field_pill.dart';
 import 'sample_meter.dart';
@@ -21,7 +21,7 @@ class SurveyCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.clay.withOpacity(0.28)),
+        border: Border.all(color: AppColors.clay.withValues(alpha: 0.28)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

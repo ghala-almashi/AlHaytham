@@ -94,7 +94,7 @@ class _GreetingBar extends StatelessWidget {
           height: 46,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: AppColors.aqua.withOpacity(0.2),
+            color: AppColors.aqua.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Text(
@@ -159,7 +159,7 @@ class _EmptyState extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.clay.withOpacity(0.28)),
+        border: Border.all(color: AppColors.clay.withValues(alpha: 0.28)),
       ),
       child: Column(
         children: [
@@ -194,7 +194,7 @@ class _BottomBar extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border(
-          top: BorderSide(color: AppColors.clay.withOpacity(0.3)),
+          top: BorderSide(color: AppColors.clay.withValues(alpha: 0.3)),
         ),
       ),
       child: BottomNavigationBar(

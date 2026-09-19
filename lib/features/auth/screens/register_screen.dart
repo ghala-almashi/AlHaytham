@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/AlHaytham_button.dart';
-import '../../../core/widgets/AlHaytham_text_field.dart';
+import '../../../core/widgets/alhaytham_button.dart';
+import '../../../core/widgets/alhaytham_text_field.dart';
 import '../../home/screens/home_screen.dart';
 import '../widgets/auth_scaffold.dart';
 
@@ -41,12 +41,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _register() async {
-    // التحقق من الحقول
     if (!(_formKey.currentState?.validate() ?? false)) {
       return;
     }
-
-    // التحقق من الموافقة على الشروط
     if (!_agreed) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -65,16 +62,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      // إنشاء الحساب في Firebase Authentication
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _email.text.trim(),
         password: _password.text,
       );
 
-      // التأكد أن الصفحة ما زالت موجودة
       if (!mounted) return;
 
-      // الانتقال إلى الصفحة الرئيسية بعد نجاح التسجيل
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const HomeScreen()),
         (route) => false,
@@ -354,7 +348,7 @@ class _ChoiceRow extends StatelessWidget {
               border: Border.all(
                 color: isSelected
                     ? AppColors.coral
-                    : AppColors.clay.withOpacity(0.5),
+                    : AppColors.clay.withValues(alpha: 0.5),
               ),
             ),
             child: Text(

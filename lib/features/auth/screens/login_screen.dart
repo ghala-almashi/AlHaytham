@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../../../core/widgets/AlHaytham_button.dart';
-import '../../../core/widgets/AlHaytham_text_field.dart';
+import '../../../core/widgets/alhaytham_button.dart';
+import '../../../core/widgets/alhaytham_text_field.dart';
 import '../../home/screens/home_screen.dart';
 import '../widgets/auth_scaffold.dart';
 import 'register_screen.dart';
@@ -36,6 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
           email: _email.text.trim(),
           password: _password.text.trim(),
         );
+        if (!mounted) return;
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const HomeScreen()),
         );
@@ -51,6 +52,18 @@ class _LoginScreenState extends State<LoginScreen> {
     return AuthScaffold(
       title: 'أهلاً فيك مرة ثانية',
       subtitle: 'سجّل دخولك عشان تكمّل الاستبيانات اللي تناسب ملفك.',
+      footer: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('ما عندك حساب؟', style: AppText.body(13.5)),
+          TextButton(
+            onPressed: () => Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (_) => const RegisterScreen())),
+            child: const Text('أنشئ حساب مشارك'),
+          ),
+        ],
+      ),
       child: Form(
         key: _formKey,
         child: Column(
@@ -106,18 +119,6 @@ class _LoginScreenState extends State<LoginScreen> {
             AlHaythamButton(label: 'تسجيل الدخول', onPressed: _login),
           ],
         ),
-      ),
-      footer: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('ما عندك حساب؟', style: AppText.body(13.5)),
-          TextButton(
-            onPressed: () => Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (_) => const RegisterScreen())),
-            child: const Text('أنشئ حساب مشارك'),
-          ),
-        ],
       ),
     );
   }

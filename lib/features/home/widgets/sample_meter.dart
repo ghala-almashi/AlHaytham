@@ -26,7 +26,7 @@ class SampleMeter extends StatelessWidget {
           child: LinearProgressIndicator(
             value: ratio,
             minHeight: 6,
-            backgroundColor: AppColors.clay.withOpacity(0.3),
+            backgroundColor: AppColors.clay.withValues(alpha: 0.3),
             valueColor: const AlwaysStoppedAnimation<Color>(AppColors.aqua),
           ),
         ),

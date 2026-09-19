@@ -26,7 +26,7 @@ class FeaturedSurveyCard extends StatelessWidget {
               height: 150,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.12),
+                color: Colors.white.withValues(alpha: 0.12),
               ),
             ),
           ),
@@ -39,7 +39,7 @@ class FeaturedSurveyCard extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -66,7 +66,7 @@ class FeaturedSurveyCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   'باقي ${survey.remaining} مشارك فقط لاكتمال العيّنة',
-                  style: AppText.body(13, color: Colors.white.withOpacity(0.9)),
+                  style: AppText.body(13, color: Colors.white.withValues(alpha: 0.9)),
                 ),
                 const SizedBox(height: 18),
                 Row(
