@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
@@ -16,12 +18,36 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String _userName = '';
   String _field = surveyFields.first;
   int _tab = 0;
 
   List<Survey> get _visibleSurveys {
     if (_field == surveyFields.first) return dummySurveys;
     return dummySurveys.where((s) => s.field == _field).toList();
+  }
+
+  Future<void> _getUserName() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) return;
+
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    if (doc.exists) {
+      setState(() {
+        _userName = doc.data()?['name'] ?? '';
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserName();
   }
 
   @override
@@ -39,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           children: [
-            const _GreetingBar(name: 'نورة'),
+            _GreetingBar(name: _userName),
             const SizedBox(height: 18),
             const _SearchField(),
             const SizedBox(height: 22),
@@ -205,8 +231,11 @@ class _BottomBar extends StatelessWidget {
         elevation: 0,
         selectedItemColor: AppColors.coral,
         unselectedItemColor: AppColors.clay,
-        selectedLabelStyle:
-            AppText.body(11, weight: FontWeight.w700, color: AppColors.coral),
+        selectedLabelStyle: AppText.body(
+          11,
+          weight: FontWeight.w700,
+          color: AppColors.coral,
+        ),
         unselectedLabelStyle: AppText.body(11, color: AppColors.clay),
         items: const [
           BottomNavigationBarItem(
