@@ -21,4 +21,6 @@ class AppColors {
     0xFF117C8B,
   ); // نص فوق خلفية الـ aqua الفاتحة
   static const Color danger = Color(0xFFD2553F);
+
+  static Color? get primary => null;
 }

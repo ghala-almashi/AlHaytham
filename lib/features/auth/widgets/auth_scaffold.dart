@@ -4,7 +4,6 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/alhaytham_mark.dart';
 
-/// الهيكل المشترك لشاشتي الدخول والتسجيل.
 class AuthScaffold extends StatelessWidget {
   const AuthScaffold({
     super.key,
@@ -60,7 +59,9 @@ class AuthScaffold extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: AppColors.clay.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: AppColors.clay.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: child,
               ),

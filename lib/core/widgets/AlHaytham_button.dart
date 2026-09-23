@@ -27,6 +27,7 @@ class AlHaythamButton extends StatelessWidget {
         child: TextButton(
           onPressed: onPressed,
           style: TextButton.styleFrom(
+            side: const BorderSide(color: AppColors.coral, width: 1.5),
             backgroundColor: AppColors.blush,
             foregroundColor: AppColors.coral,
             shape: RoundedRectangleBorder(
