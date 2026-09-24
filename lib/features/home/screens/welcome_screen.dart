@@ -16,7 +16,7 @@ class AlHaithamApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'الهيثم',
-      theme: ThemeData(useMaterial3: true, fontFamily: 'Cairo'),
+      theme: ThemeData(useMaterial3: true),
       locale: const Locale('ar'),
       supportedLocales: const [Locale('ar')],
       home: const Directionality(
@@ -63,7 +63,7 @@ class WelcomeScreen extends StatelessWidget {
                   SizedBox(
                     width: 300,
                     child: AlHaythamButton(
-                      label: 'إنشاء حساب جديد',
+                      label: 'إنـشــاء حـســاب جـديـد',
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -79,7 +79,7 @@ class WelcomeScreen extends StatelessWidget {
                   SizedBox(
                     width: 300,
                     child: AlHaythamButton(
-                      label: 'تسجيل الدخول',
+                      label: 'تـسـجـــيـــل الـدخــول',
                       onPressed: () {
                         Navigator.push(
                           context,

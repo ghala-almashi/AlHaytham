@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 
-/// زر التطبيق بنمطين: أساسي (مرجاني معبّأ) وهادئ (خلفية فاتحة).
 class AlHaythamButton extends StatelessWidget {
   const AlHaythamButton({
     super.key,
@@ -11,10 +10,12 @@ class AlHaythamButton extends StatelessWidget {
     required this.onPressed,
     this.soft = false,
     this.height = 56,
+    this.textStyle,
   });
 
   final String label;
   final VoidCallback? onPressed;
+  final TextStyle? textStyle;
   final bool soft;
   final double height;
 
@@ -33,7 +34,7 @@ class AlHaythamButton extends StatelessWidget {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),
-            textStyle: AppText.heading(14.5),
+            textStyle: AppText.button(14.5, color: AppColors.coral),
           ),
           child: Text(label),
         ),

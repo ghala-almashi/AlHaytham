@@ -30,6 +30,13 @@ class AppText {
     color: color,
     height: height,
   );
+  static TextStyle button(
+    double size, {
+    FontWeight weight = FontWeight.w600,
+    Color color = AppColors.ink,
+  }) =>
+      const TextStyle(fontFamily: 'TheYearofHandicrafts')
+          .copyWith(fontSize: size, fontWeight: weight, color: color);
 }
 
 class AppTheme {
@@ -61,7 +68,8 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: scheme,
       scaffoldBackgroundColor: AppColors.blush,
-      textTheme: GoogleFonts.tajawalTextTheme().apply(
+      textTheme: ThemeData.light().textTheme.apply(
+        fontFamily: 'TheYearofHandicrafts',
         bodyColor: AppColors.ink,
         displayColor: AppColors.ink,
       ),
@@ -90,7 +98,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
-          textStyle: AppText.heading(16, color: Colors.white),
+          textStyle: AppText.button(16, color: Colors.white),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
