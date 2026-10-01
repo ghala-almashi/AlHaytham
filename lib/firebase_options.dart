@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '618267460887',
     projectId: 'alhaytham-d6298',
     storageBucket: 'alhaytham-d6298.firebasestorage.app',
-    iosBundleId: 'com.example.baheth',
+    iosBundleId: 'com.example.alhaytham',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

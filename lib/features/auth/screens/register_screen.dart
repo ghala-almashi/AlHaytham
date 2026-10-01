@@ -18,23 +18,19 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _name = TextEditingController();
+  final _firstName = TextEditingController();
+  final _lastName = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _confirm = TextEditingController();
 
-  static const _ageGroups = ['18 - 24', '25 - 34', '35 - 44', '45 فأكثر'];
-
-  static const _genders = ['أنثى', 'ذكر'];
-
-  String _ageGroup = _ageGroups.first;
-  String _gender = _genders.first;
   bool _agreed = false;
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _name.dispose();
+    _firstName.dispose();
+    _lastName.dispose();
     _email.dispose();
     _password.dispose();
     _confirm.dispose();
@@ -70,11 +66,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
 
       final user = userCredential.user;
+      final firstName = _firstName.text.trim();
+      final lastName = _lastName.text.trim();
 
       if (user != null) {
+        await user.updateDisplayName('$firstName $lastName'.trim());
+
         await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-          'name': _name.text.trim(),
-          'gender': _gender,
+          'firstName': firstName,
+          'lastName': lastName,
           'email': _email.text.trim(),
           'createdAt': FieldValue.serverTimestamp(),
         });
@@ -101,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           break;
 
         case 'weak-password':
-          message = 'كلمة المرور ضعيفة، اختاري كلمة مرور أقوى';
+          message = 'كلمة المرور ضعيفة، اختر كلمة مرور أقوى';
           break;
 
         case 'operation-not-allowed':
@@ -109,11 +109,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           break;
 
         case 'network-request-failed':
-          message = 'تأكدي من اتصال الإنترنت وحاولي مرة ثانية';
+          message = 'تأكد من اتصال الإنترنت وحاول مرة ثانية';
           break;
 
         default:
-          message = 'حدث خطأ أثناء إنشاء الحساب، حاولي مرة ثانية';
+          message = 'حدث خطأ أثناء إنشاء الحساب، حاول مرة ثانية';
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -132,7 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SnackBar(
           backgroundColor: AppColors.ink,
           content: Text(
-            'حدث خطأ غير متوقع، حاولي مرة ثانية',
+            'حدث خطأ غير متوقع، حاول مرة ثانية',
             style: AppText.body(13.5, color: Colors.white),
           ),
         ),
@@ -150,8 +150,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return AuthScaffold(
       showBack: true,
-      title: 'سجّل كمشارك',
-      subtitle: 'دقيقة وحدة وتبدأ تشارك في بحوث حقيقية وتكسب مقابلها.',
+      // بدون title/subtitle — مطابقة للتصميم الجديد اللي ما فيه عنوان فوق النموذج.
+      // مكان الروبوت يجيك افتراضياً دائرة مرجانية؛ لما يصير عندك الملف
+      // مرّري: mascot: const RobotMascot(size: 170),
       footer: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -167,13 +168,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AlHaythamTextField(
-              controller: _name,
-              label: 'الاسم',
-              hint: 'الاسم الأول والأخير',
-              icon: Icons.person_outline_rounded,
-              validator: (value) =>
-                  (value?.trim().isEmpty ?? true) ? 'اكتب اسمك' : null,
+            // الاسم الأول والأخير بصفّ واحد
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: AlHaythamTextField(
+                    controller: _firstName,
+                    label: 'الاسم الأول',
+                    hint: '',
+                    icon: Icons.person_outline_rounded,
+                    validator: (value) => (value?.trim().isEmpty ?? true)
+                        ? 'اكتب اسمك الأول'
+                        : null,
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                Expanded(
+                  child: AlHaythamTextField(
+                    controller: _lastName,
+                    label: 'الاسم الأخير',
+                    hint: '',
+                    icon: Icons.person_outline_rounded,
+                    validator: (value) => (value?.trim().isEmpty ?? true)
+                        ? 'اكتب اسمك الأخير'
+                        : null,
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 18),
@@ -227,68 +251,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               textInputAction: TextInputAction.done,
               validator: (value) {
                 if (value != _password.text) {
-                  return 'كلمتا المرور ما تطابقن';
+                  return 'كلمتا المرور غير متطابقة';
                 }
 
                 return null;
               },
-            ),
-
-            const SizedBox(height: 24),
-
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.blush,
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'الفئة العمرية',
-                    style: AppText.heading(13, weight: FontWeight.w500),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  _ChoiceRow(
-                    options: _ageGroups,
-                    selected: _ageGroup,
-                    onSelect: (v) {
-                      setState(() {
-                        _ageGroup = v;
-                      });
-                    },
-                  ),
-
-                  const SizedBox(height: 18),
-
-                  Text(
-                    'الجنس',
-                    style: AppText.heading(13, weight: FontWeight.w500),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  _ChoiceRow(
-                    options: _genders,
-                    selected: _gender,
-                    onSelect: (v) {
-                      setState(() {
-                        _gender = v;
-                      });
-                    },
-                  ),
-
-                  const SizedBox(height: 14),
-
-                  Text(
-                    'نستخدم هذي المعلومات عشان نرشّح لك الاستبيانات اللي تنطبق عليك فقط.',
-                    style: AppText.body(12.5, color: AppColors.inkSoft),
-                  ),
-                ],
-              ),
             ),
 
             const SizedBox(height: 18),
@@ -319,62 +286,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
             const SizedBox(height: 18),
 
-            AlHaythamButton(
+            AlHaythamButtonAqua(
               label: _isLoading ? 'جاري إنشاء الحساب...' : 'إنشاء الحساب',
               onPressed: _isLoading ? null : _register,
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-/// صفّ خيارات قصيرة (الفئة العمرية / الجنس).
-class _ChoiceRow extends StatelessWidget {
-  const _ChoiceRow({
-    required this.options,
-    required this.selected,
-    required this.onSelect,
-  });
-
-  final List<String> options;
-  final String selected;
-  final ValueChanged<String> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: options.map((option) {
-        final isSelected = option == selected;
-
-        return GestureDetector(
-          onTap: () => onSelect(option),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 160),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              color: isSelected ? AppColors.coral : Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isSelected
-                    ? AppColors.coral
-                    : AppColors.clay.withValues(alpha: 0.5),
-              ),
-            ),
-            child: Text(
-              option,
-              style: AppText.body(
-                13,
-                weight: FontWeight.w500,
-                color: isSelected ? Colors.white : AppColors.inkSoft,
-              ),
-            ),
-          ),
-        );
-      }).toList(),
     );
   }
 }

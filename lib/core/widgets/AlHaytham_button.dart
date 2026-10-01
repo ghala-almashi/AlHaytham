@@ -48,3 +48,37 @@ class AlHaythamButton extends StatelessWidget {
     );
   }
 }
+
+class AlHaythamButtonAqua extends StatelessWidget {
+  const AlHaythamButtonAqua({
+    super.key,
+    required this.label,
+    required this.onPressed,
+    this.height = 56,
+  });
+
+  final String label;
+  final VoidCallback? onPressed;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height,
+      width: double.infinity,
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          side: const BorderSide(color: AppColors.aqua, width: 1.5),
+          backgroundColor: AppColors.aqua,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          textStyle: AppText.button(16, color: Colors.white),
+        ),
+        child: Text(label),
+      ),
+    );
+  }
+}
