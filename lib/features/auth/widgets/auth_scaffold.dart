@@ -61,7 +61,7 @@ class AuthScaffold extends StatelessWidget {
                       child: Image.asset(
                         _logoPath,
                         fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) => Text(
+                        errorBuilder: (_, _, _) => Text(
                           'الهيثم',
                           style: AppText.heading(28, color: AppColors.aqua),
                         ),
@@ -94,12 +94,11 @@ class AuthScaffold extends StatelessWidget {
 
             if (showBack)
               PositionedDirectional(
-                top: 4,
-                start: 0,
+                top: 10,
+                start: 10,
                 child: IconButton(
                   onPressed: () => Navigator.of(context).maybePop(),
-                  // السهم لليمين لأن الواجهة من اليمين لليسار
-                  icon: const Icon(Icons.arrow_forward_rounded),
+                  icon: const Icon(Icons.arrow_back_ios_rounded),
                   color: AppColors.ink,
                   tooltip: 'رجوع',
                   style: IconButton.styleFrom(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'core/theme/app_theme.dart';
-import 'features/home/screens/welcome_screen.dart';
+import 'features/home/screens/home_screen.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 
@@ -22,7 +22,7 @@ class AlHaythamApp extends StatelessWidget {
       title: 'باحث',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const WelcomeScreen(),
+      home: const HomeScreen(),
       builder: (context, child) => Directionality(
         textDirection: TextDirection.rtl,
         child: child ?? const SizedBox.shrink(),

@@ -50,6 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return AuthScaffold(
+      showBack: true,
       title: 'أهلاً فيك مرة ثانية',
       subtitle: 'سجّل دخولك عشان تكمّل الاستبيانات اللي تناسب ملفك.',
       footer: Row(

@@ -4,11 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_theme.dart';
-import '../data/dummy_surveys.dart';
-import '../models/survey.dart';
-import '../widgets/category_filter.dart';
-import '../widgets/featured_survey_card.dart';
 import '../widgets/survey_card.dart';
+import 'surveys_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,12 +16,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String _userName = '';
-  String _field = surveyFields.first;
   int _tab = 0;
 
-  List<Survey> get _visibleSurveys {
-    if (_field == surveyFields.first) return dummySurveys;
-    return dummySurveys.where((s) => s.field == _field).toList();
+  /// جلب جميع الاستبيانات من Firebase Firestore
+  Stream<QuerySnapshot<Map<String, dynamic>>> get _surveysStream {
+    return FirebaseFirestore.instance.collection('surveys').snapshots();
   }
 
   Future<void> _getUserName() async {
@@ -52,60 +48,98 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final surveys = _visibleSurveys;
-
     return Scaffold(
       backgroundColor: AppColors.blush,
+
       bottomNavigationBar: _BottomBar(
         current: _tab,
         onChanged: (i) => setState(() => _tab = i),
       ),
+
       body: SafeArea(
         bottom: false,
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
-          children: [
-            _GreetingBar(name: _userName),
-            const SizedBox(height: 18),
-            const _SearchField(),
-            const SizedBox(height: 22),
-            const FeaturedSurveyCard(survey: featuredSurvey),
-            const SizedBox(height: 26),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+        child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: _surveysStream,
+          builder: (context, snapshot) {
+            // أثناء تحميل البيانات
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (snapshot.hasError) {
+              return ListView(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+                children: [
+                  _GreetingBar(name: _userName),
+                  const SizedBox(height: 22),
+                  const _EmptyState(),
+                ],
+              );
+            }
+
+            final surveys = snapshot.data?.docs ?? [];
+
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
               children: [
-                Text('استبيانات مفتوحة', style: AppText.heading(17)),
-                const Spacer(),
-                Text(
-                  '${surveys.length} متاح لك',
-                  style: AppText.body(12.5, color: AppColors.clay),
+                _GreetingBar(name: _userName),
+
+                const SizedBox(height: 22),
+
+                // عرض الاستبيان المميز إذا كانت الاستبيانات موجودة
+                if (surveys.isNotEmpty) ...[
+                  // مؤقتًا نعرض أول استبيان
+                  // سيتم ربطه بـ FeaturedSurveyCard بعد إنشاء Survey model
+                  Text(
+                    surveys.first.data()['title'] ?? 'بدون عنوان',
+                    style: AppText.heading(17),
+                  ),
+                  const SizedBox(height: 26),
+                ],
+
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('استبيانات مفتوحة', style: AppText.heading(17)),
+                    const Spacer(),
+                    Text(
+                      '${surveys.length} متاح لك',
+                      style: AppText.body(12.5, color: AppColors.clay),
+                    ),
+                  ],
                 ),
+
+                const SizedBox(height: 18),
+
+                // لا يوجد استبيانات
+                if (surveys.isEmpty)
+                  const _EmptyState()
+                // يوجد استبيانات
+                else
+                  ...surveys.map((doc) {
+                    doc.data();
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 14),
+                      child: SurveyCard(
+                        // مؤقتًا لا نرسل Survey هنا
+                        // إلى أن يتم إنشاء Survey.fromFirestore
+                        survey: throw UnimplementedError(
+                          'Survey.fromFirestore سيتم إضافتها لاحقًا',
+                        ),
+                      ),
+                    );
+                  }),
               ],
-            ),
-            const SizedBox(height: 14),
-            CategoryFilter(
-              fields: surveyFields,
-              selected: _field,
-              onChanged: (value) => setState(() => _field = value),
-            ),
-            const SizedBox(height: 18),
-            if (surveys.isEmpty)
-              const _EmptyState()
-            else
-              ...surveys.map(
-                (survey) => Padding(
-                  padding: const EdgeInsets.only(bottom: 14),
-                  child: SurveyCard(survey: survey),
-                ),
-              ),
-          ],
+            );
+          },
         ),
       ),
     );
   }
 }
 
-/// ترحيب أعلى الشاشة مع الصورة الرمزية والتنبيهات.
+/// ترحيب أعلى الشاشة
 class _GreetingBar extends StatelessWidget {
   const _GreetingBar({required this.name});
 
@@ -123,25 +157,24 @@ class _GreetingBar extends StatelessWidget {
             color: AppColors.aqua.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Text(
-            name.substring(0, 1),
-            style: AppText.heading(18, color: AppColors.aquaDeep, height: 1),
+          child: Icon(
+            Icons.person_rounded,
+            size: 24,
+            color: AppColors.aquaDeep,
           ),
         ),
+
         const SizedBox(width: 12),
+
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('أهلاً $name', style: AppText.heading(17, height: 1.2)),
-              const SizedBox(height: 4),
-              Text(
-                'عندك 5 استبيانات تناسب ملفك اليوم',
-                style: AppText.body(12.5, height: 1.2),
-              ),
             ],
           ),
         ),
+
         IconButton(
           onPressed: () {},
           tooltip: 'التنبيهات',
@@ -159,21 +192,7 @@ class _GreetingBar extends StatelessWidget {
   }
 }
 
-class _SearchField extends StatelessWidget {
-  const _SearchField();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      style: AppText.body(14, color: AppColors.ink),
-      decoration: const InputDecoration(
-        hintText: 'دوّر على استبيان أو مجال',
-        prefixIcon: Icon(Icons.search_rounded, size: 20, color: AppColors.clay),
-      ),
-    );
-  }
-}
-
+/// شاشة عدم وجود استبيانات
 class _EmptyState extends StatelessWidget {
   const _EmptyState();
 
@@ -182,25 +201,14 @@ class _EmptyState extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.clay.withValues(alpha: 0.28)),
-      ),
       child: Column(
         children: [
           Icon(Icons.inbox_rounded, size: 34, color: AppColors.clay),
           const SizedBox(height: 14),
           Text(
-            'ما فيه استبيانات مفتوحة في هذا المجال',
+            'لا يوجد استبيانات مفتوحة',
             textAlign: TextAlign.center,
             style: AppText.heading(15),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'جرّب مجال ثاني، أو فعّل التنبيهات ونخبرك أول ما ينزل استبيان جديد.',
-            textAlign: TextAlign.center,
-            style: AppText.body(13),
           ),
         ],
       ),
@@ -225,7 +233,6 @@ class _BottomBar extends StatelessWidget {
       ),
       child: BottomNavigationBar(
         currentIndex: current,
-        onTap: onChanged,
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -237,6 +244,23 @@ class _BottomBar extends StatelessWidget {
           color: AppColors.coral,
         ),
         unselectedLabelStyle: AppText.body(11, color: AppColors.clay),
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SurveysScreen()),
+            );
+            return;
+          }
+
+          if (index == 2) {
+            // صفحة أرباحي
+          } else if (index == 3) {
+            // صفحة حسابي
+          }
+
+          onChanged(index);
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_rounded),
